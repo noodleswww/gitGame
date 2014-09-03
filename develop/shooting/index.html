@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{margin:0;padding: 0;}
+        body{height: 568px;width:320px;overflow: hidden;}
+        #game{position: absolute;height: 100%;width: 100%;overflow: hidden;}
+        #image{
+            width: 320px;
+            height: 568px;
+        }
+        #startGame,#moreGame{
+            width: 180px;
+            height: 50px;
+            display: block;
+            background: steelblue;
+            border: 1px solid wheat;
+            font-size: 25px;
+            color:wheat;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+        #startGame{
+            position: absolute;
+            top:400px;
+            left:60px;
+        }
+        #moreGame{
+            position: absolute;
+            top:460px;
+            left:60px;
+        }
+    </style>
+</head>
+<body>
+<div id="game">
+    <img src="home.png" id="image" />
+    <canvas id="canvas" width="320" height="568" style="background: black;"></canvas>
+</div>
+<button id="startGame">开始游戏</button>
+<button id="moreGame">更多游戏</button>
+</body>
+
+<script>
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    var gameDiv = document.getElementById('game');
+    var startB = document.getElementById('startGame');
+    var moreGame = document.getElementById('moreGame');
+
+    //常量定义
+    var screenWidth = 320,//游戏宽度
+        screenHeight=568,//游戏高度
+        playerSpeed= 0.005,//玩家速度
+        cpuSpeed = parseInt(Math.random())*5+ 5,//电脑速度
+        isEnd = false;//游戏是否结束
+
+    startB.addEventListener('click',initGame);
+
+    function initGame(e){
+        document.getElementById('image').style.display='none';
+        startB.style.display='none';
+        moreGame.style.display='none';
+        //1:绘制分割线
+        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = 'yellow';
+        ctx.moveTo(0,400);
+        ctx.lineTo(320,400);
+        ctx.stroke();
+
+        //定位白球
+        ctx.fillStyle="white";
+        ctx.beginPath();
+        ctx.arc(screenWidth/2,screenHeight-20,8,0,Math.PI*2,true);
+        ctx.closePath();
+        ctx.fill();
+
+        //子弹和得分
+        ctx.font="normal 14px arial";
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        ctx.fillText("第 1/5 弹",45,20);
+        ctx.fillText("得分：0.0",270,20);
+
+        //canvas监听
+        canvas.addEventListener('click',gotoGame);
+    }
+
+    function gotoGame(e) {
+//console.log(e.clientX+","+ e.clientY);
+        var mousex = e.clientX;
+        var mousey = e.clientY;
+
+        //白球和鼠标点击坐标的   x,y比例
+        var rateX = (screenWidth/2) / mousex;
+        var rateY = (screenHeight-20) / mousey;
+
+//console.log(rateX+";;"+rateY);
+        var i=1;
+        //判断白球移动的方向   左上，右上
+        var dir=mousex>screenWidth/2?"right":"left";
+        while(true){
+            //清除当前白球
+            if(dir=="right")
+                ctx.clearRect(screenWidth/2+playerSpeed*rateX*(i-1)-8*2,screenHeight-20-playerSpeed*rateY*(i-1)-8*2,
+                            screenWidth/2+playerSpeed*rateX*(i-1)+4,screenHeight-20-playerSpeed*rateY*(i-1)+8);
+            else
+                ctx.clearRect(screenWidth/2-playerSpeed*rateX*(i-1)-8,screenHeight-20-playerSpeed*rateY*(i-1)-8,
+                                screenWidth/2-playerSpeed*rateX*(i-1)+8,screenHeight-20-playerSpeed*rateY*(i-1)+8);
+            //继续绘制
+            ctx.fillStyle="white";
+            ctx.beginPath();
+
+            if(dir=="right")
+                ctx.arc(screenWidth/2+playerSpeed*rateX*i,screenHeight-20-playerSpeed*rateY*i,8,0,Math.PI*2,true);
+            else
+                ctx.arc(screenWidth/2-playerSpeed*rateX*i,screenHeight-20-playerSpeed*rateY*i,8,0,Math.PI*2,true);
+
+            ctx.closePath();
+            ctx.fill();
+            if((screenHeight-20-playerSpeed*rateY*i)==mousey)break;
+            i++;
+        }
+        //重新绘制分割线
+        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = 'yellow';
+        ctx.moveTo(0,400);
+        ctx.lineTo(320,400);
+        ctx.stroke();
+    }
+</script>
+</html>
