@@ -1,5 +1,0 @@
-C:\Users\aya\Desktop\EatCoin\EatCoin\bin\EatCoin.dll.config
-C:\Users\aya\Desktop\EatCoin\EatCoin\bin\EatCoin.dll
-C:\Users\aya\Desktop\EatCoin\EatCoin\bin\EatCoin.pdb
-C:\Users\aya\Desktop\EatCoin\EatCoin\obj\Debug\EatCoin.dll
-C:\Users\aya\Desktop\EatCoin\EatCoin\obj\Debug\EatCoin.pdb
